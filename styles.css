@@ -5,7 +5,8 @@
  color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:76px}
-body{margin:0;background:var(--bg);color:var(--ink);font:500 17px/1.5 var(--f);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 17px/1.5 var(--f);-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
 img{display:block;max-width:100%}a{color:inherit;text-decoration:none}p{margin:0}
 h1,h2,h3{font-family:var(--f);font-weight:800;letter-spacing:-.04em;line-height:.95;margin:0}
 h2{font-size:clamp(44px,6vw,92px);max-width:14ch}h3{font-size:30px;letter-spacing:-.03em}
@@ -152,11 +153,10 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 
 /* servicios: tres bloques de color con fotos recortadas */
-.svc{display:grid;grid-template-columns:repeat(3,1fr);margin-top:72px;border:1px solid var(--line)}
-.sc{position:relative;min-height:700px;padding:34px 30px 0;display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--line)}
-.sc:last-child{border-right:0}
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:72px}
+.sc{container-type:inline-size;position:relative;min-height:700px;padding:34px 30px 0;display:flex;flex-direction:column;overflow:hidden}
 .c1{background:var(--vio)}.c2{background:var(--pink)}.c3{background:var(--blue)}
-.sc h3{font-size:clamp(36px,3.8vw,58px);line-height:.92;margin:22px 0 18px;letter-spacing:-.045em}
+.sc h3{font-size:clamp(36px,3.8vw,58px);font-size:min(clamp(36px,3.8vw,58px),16cqi);line-height:.92;margin:22px 0 18px;letter-spacing:-.045em}
 .sc p{font-size:15.5px;max-width:34ch}
 .sc ul{list-style:none;margin:22px 0 0;padding:0}
 .sc li{padding:11px 0;border-top:1px solid rgba(11,10,11,.4);font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px}
@@ -211,7 +211,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 /* franja de marcas */
 .brands{display:flex;align-items:center;gap:28px 48px;padding:30px 40px;justify-content:space-between;flex-wrap:wrap;background:var(--yel);border-bottom:1px solid var(--line)}
 .brands .lb{max-width:170px;line-height:1.3;font-size:11px}
-.brands .lg{flex:1}.brands .mq-t{justify-content:space-around;gap:24px 48px}
+.brands .lg{flex:1;display:flex;align-items:center;justify-content:space-around;gap:24px 48px;flex-wrap:wrap}
 .brands img{--lh:62px;height:calc(var(--lh)*var(--ls,1));width:auto;max-width:none;object-fit:contain;flex:none}
 /* cada logo con la altura que le da el mismo peso visual */
 .brands img[src*="ecopetrol"]{--lh:52px}.brands img[src*="mosquera"]{--lh:78px}.brands img[src*="procolombia"]{--lh:64px}.brands img[src*="nike"]{--lh:56px}
@@ -223,74 +223,92 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 .seal .sa{fill:none;stroke:var(--org);stroke-width:2.6}
 header .r{white-space:nowrap}
 .hero .acts .btn,.hero .acts .lnk{white-space:nowrap}
+.mb{display:none}
 
-/* banner en movimiento (franja de servicios y marcas): se activa solo cuando no cabe en una línea */
+/* franja de servicios: banner en movimiento solo cuando no cabe en una línea */
 .mq{min-width:0;overflow:hidden}
 .mq-t{display:flex;align-items:center}
 .mq .cl{display:none}
-.mq.on{-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.mq.on{-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);pointer-events:none}
 .mq.on .mq-t{width:max-content;justify-content:flex-start;gap:0;animation:mq var(--mqd,30s) linear infinite}
 .mq.on .mq-t>*{margin-right:var(--mqg,48px)}
 .mq.on .cl{display:block}
-.mq.on:hover .mq-t{animation-play-state:paused}
 @keyframes mq{to{transform:translateX(-50%)}}
 .strip .mq{flex:1}.strip .mq-t{justify-content:space-between;gap:20px 32px}
 
-/* filas deslizables: indicador de posición */
-.hs-dots{display:flex;justify-content:center;gap:8px;padding:18px 0 0}
-.hs-dots[hidden]{display:none}
+/* filas deslizables: flechas y puntos de posición */
+.hs-nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:18px 0 0}
+.hs-nav[hidden]{display:none}
+.hs-dots{display:flex;gap:8px}
 .hs-dots i{width:8px;height:8px;border-radius:999px;background:var(--ink);opacity:.25;transition:width .3s var(--ease),opacity .3s}
 .hs-dots i.on{width:24px;opacity:1}
-.band+.hs-dots{padding:14px 0;border-bottom:1px solid var(--line)}
+.hs-b{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0;transition:background .25s,color .25s,opacity .25s}
+.hs-b::before{content:"";width:16px;height:16px;background:currentColor;-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
+.hs-b.prev::before{transform:scaleX(-1)}
+.hs-b:disabled{opacity:.3;cursor:default}
+@media(hover:hover){.hs-b:not(:disabled):hover{background:var(--ink);color:#fff}}
+.band+.hs-nav{padding:14px 0;border-bottom:1px solid var(--line)}
 .gr-row{display:contents}
+
+/* en pantallas táctiles, sin efectos de "hover" que desplazan elementos */
+@media(hover:none){.pc:hover,.a2 ul li:hover,.pill:hover,.tabs button:hover,.btn:hover,.sc:hover li::after{transform:none}.a1:hover img,.sc:hover .shot img{transform:none}}
 
 /* pantallas medianas: el menú se ajusta para no chocar con el logo */
 @media(max-width:1180px){header{padding:0 28px}nav{gap:clamp(14px,calc(4.8vw - 24px),38px)}}
 
-/* proceso: los 5 pasos siguen en horizontal y se deslizan */
+/* ---- filas deslizables: una tarjeta completa por vista, sin cortes ni movimiento vertical ---- */
 @media(max-width:1000px){
- .st{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(240px,36vw);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gut));padding:0 var(--gut);scroll-padding-inline:var(--gut)}
- .st li{scroll-snap-align:start;min-height:240px}
+ .st{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc(100%/3);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gut));padding:0 var(--gut);scroll-padding-inline:var(--gut)}
+ .st li{scroll-snap-align:start;scroll-snap-stop:always;min-height:240px}
  .st li:last-child{border-right:1px solid var(--line)}
+ .st>.rv{opacity:1;transform:none;transition:none}
+ .st::-webkit-scrollbar{display:none}
 }
 
 @media(max-width:900px){
  :root{--gut:20px}
- html{scroll-padding-top:112px}
+ html{scroll-padding-top:76px}
  section{padding:72px 0}
- /* encabezado: el menú pasa a una fila deslizable debajo del logo */
- header{height:auto;grid-template-columns:1fr auto;grid-template-rows:60px 44px;padding:0 20px}
- nav{display:flex;grid-column:1/-1;grid-row:2;align-items:center;gap:26px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px;border-top:1px solid rgba(11,10,11,.15);-webkit-mask:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 24px),transparent);mask:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 24px),transparent)}
- nav::-webkit-scrollbar{display:none}
- nav a{flex:none;white-space:nowrap}nav a::after{bottom:-5px}
+ /* encabezado: menú desplegable */
+ header{height:64px;grid-template-columns:1fr auto auto;gap:0 10px;padding:0 20px}
+ .mb{display:grid;place-items:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink);cursor:pointer;padding:0}
+ .mb span{grid-area:1/1;width:24px;height:2px;background:currentColor;transition:transform .3s var(--ease)}
+ .mb span:first-child{transform:translateY(-4px)}.mb span:last-child{transform:translateY(4px)}
+ header.open .mb span:first-child{transform:rotate(45deg)}header.open .mb span:last-child{transform:rotate(-45deg)}
+ nav{position:absolute;left:0;right:0;top:100%;display:flex;flex-direction:column;gap:0;padding:4px 20px 20px;background:var(--bg);border-bottom:1px solid var(--line);max-height:calc(100vh - 64px);overflow-y:auto;visibility:hidden;opacity:0;transform:translateY(-10px);transition:opacity .25s,transform .3s var(--ease),visibility 0s .3s}
+ header.open nav{visibility:visible;opacity:1;transform:none;transition:opacity .25s,transform .3s var(--ease)}
+ nav a{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid rgba(11,10,11,.25);font:800 26px/1.1 var(--f);letter-spacing:-.03em;text-transform:none}
+ nav a:first-child{border-top:0}
+ nav a::after,nav a:hover::after,nav a.act::after{content:"";position:static;width:20px;height:20px;flex:none;background:currentColor;transform:none;-webkit-mask:var(--arr-ne) center/contain no-repeat;mask:var(--arr-ne) center/contain no-repeat}
+ nav a.act{color:var(--org)}
  /* inicio a dos columnas en tablet */
  .hero{min-height:600px;padding:0 20px}
  .seal{left:-9%;top:20%;width:88px}
- /* franja de la portada: los tres bloques siguen en horizontal y se deslizan */
- .band{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:auto;min-height:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;border-bottom:0}
- .band>*{scroll-snap-align:start}
- .a1{width:min(80vw,420px);min-height:460px}
- .a2{width:min(92vw,540px);padding:30px 22px}
+ /* franja de la portada: los tres bloques en fila deslizable */
+ .band{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:50%;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain;border-bottom:0}
+ .band>*{scroll-snap-align:start;scroll-snap-stop:always}
+ .a1{min-height:460px}
+ .a2{padding:30px 22px}
  .a2 ul{font-size:clamp(26px,7.4vw,40px)}
- .a3{width:min(80vw,420px);padding:30px 22px}
+ .a3{padding:30px 22px}
  /* franja de servicios: banner en movimiento */
  .strip{display:block;padding:22px 0 24px}
  .strip .lb{max-width:none;padding:0 20px;margin-bottom:14px}
  .strip .s,.strip .s.i,.strip .s.u,.strip .s.l{font-size:22px}
- /* servicios y sesiones: tarjetas en fila deslizable */
- .svc,.sg{grid-template-columns:none;grid-auto-flow:column;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin-left:-20px;margin-right:-20px;padding:0 20px;scroll-padding-inline:20px}
- .svc{grid-auto-columns:min(84vw,400px);border:0;margin-top:56px}
- .sc{container-type:inline-size;min-height:0;padding:30px 24px;border:1px solid var(--line);border-right:0;scroll-snap-align:start}
- .sc:last-child{border-right:1px solid var(--line)}
+ /* servicios y sesiones: tarjetas en fila deslizable, con espacio entre ellas */
+ .svc,.sg{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 20px)/2);gap:20px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain;margin-left:-20px;margin-right:-20px;padding:0 20px;scroll-padding-inline:20px}
+ .svc{margin-top:56px}
+ .sc{container-type:inline-size;min-height:0;padding:30px 24px;scroll-snap-align:start;scroll-snap-stop:always}
  .sc h3{font-size:clamp(28px,14cqi,46px)}
- .sg{grid-auto-columns:min(84vw,380px);margin-top:56px;padding-top:4px;padding-bottom:8px}
- .sg>*{scroll-snap-align:start}
+ .sg{margin-top:56px}
+ .sg>*{scroll-snap-align:start;scroll-snap-stop:always}
+ .svc>.rv,.sg>.rv{opacity:1;transform:none;transition:none}
  .pc{padding:30px 26px}
- .svc::-webkit-scrollbar,.sg::-webkit-scrollbar,.band::-webkit-scrollbar,.st::-webkit-scrollbar,#p2::-webkit-scrollbar,.gr-row::-webkit-scrollbar{display:none}
- /* marcas: banner en movimiento */
+ .svc::-webkit-scrollbar,.sg::-webkit-scrollbar,.band::-webkit-scrollbar,#p2::-webkit-scrollbar,.gr-row::-webkit-scrollbar{display:none}
+ /* marcas: fijas, completas dentro de la pantalla */
  .brands{display:block;padding:24px 0 28px}
  .brands .lb{max-width:none;padding:0 20px;margin-bottom:18px}
- .brands{--ls:.8}
+ .brands .lg{padding:0 20px}
  /* sobre nosotros: foto y texto lado a lado */
  .pp,.pp.rev{grid-template-columns:minmax(0,40%) 1fr;gap:36px;margin-top:48px}
  .pp.rev{grid-template-columns:1fr minmax(0,40%)}
@@ -298,10 +316,8 @@ header .r{white-space:nowrap}
  .px p{font-size:17px}
  .cta,.team{padding:32px 24px}
  .fq button{font-size:clamp(20px,2.4vw + 10px,26px)}
+ .sh-head{grid-template-columns:1fr;gap:32px}
 }
-
-/* tablet: encabezados y contacto conservan dos columnas */
-@media(max-width:900px){.sh-head{grid-template-columns:1fr;gap:32px}}
 @media(max-width:900px) and (min-width:721px){.ct .wrap{gap:40px}}
 @media(max-width:720px){.ct .wrap{grid-template-columns:1fr;gap:32px}}
 
@@ -315,14 +331,23 @@ header .r{white-space:nowrap}
  .sd{right:8px}
  .seal{left:3%;top:3%;width:clamp(76px,20vw,100px)}
  /* paquetes mensuales y proyectos: fila deslizable */
- #p2.on,.gr-row{display:grid;grid-template-columns:none;grid-auto-flow:column;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;scroll-padding-inline:20px}
- #p2.on{grid-auto-columns:min(84vw,380px);padding-top:16px;padding-bottom:8px;margin-top:16px}
- #p2>*{scroll-snap-align:start}
+ #p2.on,.gr-row{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 20px)/2);gap:20px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain;margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;scroll-padding-inline:20px}
+ #p2.on{padding-top:16px;padding-bottom:4px;margin-top:16px}
+ #p2>*,.gr-row>*{scroll-snap-align:start;scroll-snap-stop:always}
  .gr{grid-template-columns:1fr;gap:28px}
- .gr-row{grid-auto-columns:min(84vw,520px);gap:20px}
- .gr-row>*{scroll-snap-align:start}
+ .gr-row>.rv{opacity:1;transform:none;transition:none}
  .cd h3{font-size:32px}
  .idc{grid-template-columns:1fr;padding:28px 24px;gap:28px}
+}
+
+/* celular: una tarjeta completa por vista */
+@media(max-width:600px){
+ .band{grid-auto-columns:100%}
+ .svc,.sg,#p2.on,.gr-row{grid-auto-columns:100%}
+ .st{grid-auto-columns:100%}
+ /* marcas en cuadrícula 2 × 2, más grandes y sin salirse */
+ .brands .lg{display:grid;grid-template-columns:1fr 1fr;gap:28px 18px;justify-items:center;align-items:center}
+ .brands img{height:auto;width:auto;max-width:100%;max-height:calc(var(--lh)*1.2)}
 }
 
 @media(max-width:640px){
@@ -337,7 +362,7 @@ header .r{white-space:nowrap}
 }
 
 @media(prefers-reduced-motion:reduce){
- .mq.on{overflow-x:auto;-webkit-mask:none;mask:none}
+ .mq.on{overflow-x:auto;-webkit-mask:none;mask:none;pointer-events:auto}
  .mq.on .mq-t{animation:none}
  .mq.on .cl{display:none}
 }
